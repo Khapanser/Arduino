@@ -58,6 +58,7 @@ public class ArduinoClient {
     public void setUpNetworking(){
         try{
             socket = new Socket("127.0.0.1",7000);
+            System.out.println(socket.isConnected());
             writer = new PrintWriter(socket.getOutputStream());
         }catch(Exception e){e.printStackTrace();}
 

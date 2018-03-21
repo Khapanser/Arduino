@@ -26,13 +26,18 @@ public class ArduinoServer {
             ServerSocket socket = new ServerSocket(serverPort);
             Socket clientSocket = socket.accept();
             System.out.println("Выполнено подключение клиента...");
+            System.out.println("IP: "+ socket.getInetAddress());
+            System.out.println("");
             //PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
             InputStreamReader isReader = new InputStreamReader(clientSocket.getInputStream());
             BufferedReader reader = new BufferedReader(isReader);
 
             // Указываем на каком порту подключён Arduino
+
             Arduino arduino = new Arduino("COM52", 9600);
+
             while ((message = reader.readLine()) != null) {
+
                 /**
                  * Код для отправки на Arduino
                  */
@@ -53,6 +58,7 @@ public class ArduinoServer {
                         arduino.serialWrite('0');
                         arduino.closeConnection();
                 }
+
                 //}catch (Exception ee){ee.printStackTrace();}
             }
 
