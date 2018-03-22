@@ -12,7 +12,7 @@ import java.net.Socket;
 import arduino.Arduino;
 
 public class ArduinoServer {
-    int serverPort = 7000;
+    int serverPort = 7010;
     String message;
 
     public static void main(String[] args) throws InterruptedException {
@@ -34,7 +34,7 @@ public class ArduinoServer {
 
             // Указываем на каком порту подключён Arduino
 
-            Arduino arduino = new Arduino("COM52", 9600);
+            Arduino arduino = new Arduino("COM4", 9600);
 
             while ((message = reader.readLine()) != null) {
 

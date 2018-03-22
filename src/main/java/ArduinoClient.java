@@ -33,7 +33,7 @@ public class ArduinoClient {
         frame.getContentPane().add(BorderLayout.EAST,exitButton);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,500);
+        frame.setSize(500,100);
         frame.setVisible(true);
 
         onButton.addActionListener(event -> {
@@ -57,7 +57,7 @@ public class ArduinoClient {
 
     public void setUpNetworking(){
         try{
-            socket = new Socket("127.0.0.1",7000);
+            socket = new Socket("127.0.0.1",7010);
             System.out.println(socket.isConnected());
             writer = new PrintWriter(socket.getOutputStream());
         }catch(Exception e){e.printStackTrace();}
