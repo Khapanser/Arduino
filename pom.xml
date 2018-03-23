@@ -8,7 +8,7 @@
     <artifactId>Arduino</artifactId>
     <packaging>jar</packaging>
     <description>Arduino - app for testing functionality of Java plus Arduino.</description>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Arduino</name>
     <url>http://maven.apache.org</url>
 
@@ -32,14 +32,31 @@
                 <artifactId>joda-time</artifactId>
                 <version>2.2</version>
             </dependency>
-			
-			<dependency>
-                <groupId>com.khapanser.app</groupId>
-                <artifactId>Arduino</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
+    <!-- Прописываем все используемые библиотеки (зависимости) -->
+        <dependency>
+            <groupId>com.arduino</groupId>
+            <artifactId>ard1</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/arduino.jar</systemPath>
+        </dependency>
 
-        <!-- end::joda[] -->
+        <dependency>
+            <groupId>com.jSerial</groupId>
+            <artifactId>ard2</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/jSerialComm-1.3.11.jar</systemPath>
+        </dependency>     <!-- -->
+
+
+        <!--		<dependency>
+                    <groupId>com.khapanser.app</groupId>
+                    <artifactId>Arduino</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </dependency>-->
+
+            <!-- end::joda[] -->
 
       <!--  <dependency>
             <groupId>junit</groupId>
@@ -69,6 +86,7 @@
 
     <build>
         <plugins>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -90,6 +108,85 @@
                     </execution>
                 </executions>
             </plugin>
+-->
+            <!--       <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-jar-plugin</artifactId>
+                      <configuration>
+                          <archive>
+                              <manifest>
+                                  <addClasspath>true</addClasspath>
+                                  <classpathPrefix>lib/</classpathPrefix>
+                                  <mainClass>com.khapersky.app</mainClass>
+                              </manifest>
+                          </archive>
+                      </configuration>
+                  </plugin>
+
+                        <plugin>
+                             <groupId>org.apache.maven.plugins</groupId>
+                             <artifactId>maven-dependency-plugin</artifactId>
+                             <executions>
+                                 <execution>
+                                     <id>copy</id>
+                                     <phase>install</phase>
+                                     <goals>
+                                         <goal>copy-dependencies</goal>
+                                     </goals>
+                                     <configuration>
+                                         <outputDirectory>
+                                             ${project.build.directory}/lib
+                                         </outputDirectory>
+                                     </configuration>
+                                 </execution>
+                             </executions>
+                         </plugin>
+
+
+
+
+                          -->
+            <!-- The first plugin puts all dependencies in the target/classes/lib folder  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+<!--  The second one includes the library folder in the final JAR file, and configures the Manifest.mf file.  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- <classpathPrefix>lib</classpathPrefix> -->
+                            <!-- <mainClass>test.org.Cliente</mainClass> -->
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>lib/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+
+
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
