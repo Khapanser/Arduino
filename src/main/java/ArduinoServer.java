@@ -57,8 +57,6 @@ public class ArduinoServer {
                     writer.println("Пришло NOT NULL сообщение с ардуино:");
                     writer.println(message);
                     writer.flush();
-                    //Добавлен sleep для смены потока, чтобы не засиживался
-                    //Thread.sleep(100);
                 }
                 else {
                     writer.println("Пришло NULL сообщение с ардуино!");
@@ -66,35 +64,6 @@ public class ArduinoServer {
                 }
             }
 
-
-   /*
-            while ((message = reader.readLine()) != null) {
-
-
-                 //Код для отправки на Arduino
-
-                System.out.println("С клиента получено: \"" + message + "\"");
-                boolean connected = arduino.openConnection();
-                System.out.println("Соединение установлено: " + connected);
-                //Уменьшил с 2000 до 10
-                Thread.sleep(10);
-
-                switch (message) {
-                    case "on":
-                        //arduino.serialWrite('k');
-                        arduino.serialWrite("NIKITA ");
-                        break;
-                    case "off":
-                        //arduino.serialWrite('1');
-                        arduino.serialWrite("KAPILA!");
-                        break;
-                    case "exit":
-                        arduino.serialWrite('0');
-                        arduino.closeConnection();
-                }
-
-            }
-*/
         } catch (Exception er) {
             er.printStackTrace();
         }
@@ -104,9 +73,7 @@ public class ArduinoServer {
         Socket sock;
         BufferedReader reader;
         Arduino arduino;
-        public ClientHandler (Socket clientSocket){
-            sock = clientSocket;
-        }
+
         public ClientHandler (BufferedReader reader,Arduino arduino){
             this.arduino = arduino;
             this.reader = reader;
@@ -116,28 +83,9 @@ public class ArduinoServer {
 
             try {
                 while ((message = reader.readLine()) != null) {
-                    /*switch (message) {
-                        case "on":
-                            //arduino.serialWrite('0');
-                            arduino.serialWrite("NIKITA ");
-                            break;
-                        case "off":
-                            //arduino.serialWrite('1');
-                            arduino.serialWrite("KAPILA!");
-                            break;
-                        case "exit":
-                            arduino.serialWrite('0');
-                            arduino.closeConnection();
-                    }*/
                     //Просто передаём строку, которую прислал сервер.
-                    System.out.println("Сейчас работает поток: " + Thread.currentThread());
-                    count++;
-                    System.out.println("Он работает " +  count+" раз");
                     arduino.serialWrite(message);
-
                     Thread.sleep(100);
-                    //break;
-                    //
 
                 }
             } catch (Exception e){e.printStackTrace();}
