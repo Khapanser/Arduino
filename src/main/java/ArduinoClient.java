@@ -75,12 +75,23 @@ public class ArduinoClient {
                 socket.close();
             }catch (Exception e){e.printStackTrace();}
         });
+
+        /*
+        TODO remove this while
+         */
+        while (true)
+        {
+            try {
+                System.out.println("Message from StabServer: " + reader.readLine());
+            } catch (Exception er){er.printStackTrace();}
+        }
+
     }
 
     public void setUpNetworking(){
         try{
-            socket = new Socket("77.37.181.102",7010);
-            //socket = new Socket("127.0.0.1",7010);
+            //socket = new Socket("77.37.181.102",7010);
+            socket = new Socket("127.0.0.1",7020);
             System.out.println(socket.isConnected());
             writer = new PrintWriter(socket.getOutputStream());
             InputStreamReader streamReader = new InputStreamReader(socket.getInputStream());
@@ -95,9 +106,9 @@ public class ArduinoClient {
         public IncomingReader(BufferedReader reader){
             this.reader = reader;
         }*/
-
+        String message;
         public void run(){
-            String message;
+
             try{
                 while((message = reader.readLine())!= null){
                     System.out.print("Сообщение с Ардуино: " + message);

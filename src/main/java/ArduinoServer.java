@@ -8,9 +8,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Импорт для Arduino
+ * TODO вернуть импорт для Arduino
+ *
+ * import arduino.Arduino;
  */
-import arduino.Arduino;
+
 
 public class ArduinoServer {
     int serverPort = 7010;
@@ -34,43 +36,44 @@ public class ArduinoServer {
             InputStreamReader isReader = new InputStreamReader(clientSocket.getInputStream());
             BufferedReader reader = new BufferedReader(isReader);
 
+            //Добавим второй сервер:
+            Socket socket2 = new Socket("127.0.0.1",7020);
+            PrintWriter writer2 = new PrintWriter(socket2.getOutputStream());
+            InputStreamReader streamReader2 = new InputStreamReader(socket2.getInputStream());
+            BufferedReader reader2 = new BufferedReader(streamReader2);
+            System.out.println("networking established");
+
+
             // Указываем на каком порту подключён Arduino
+/* TODO раскомментировать
             Arduino arduino = new Arduino("COM5", 9600);
-            //Открываем подключение к arduino по указанному порту
             boolean connected = arduino.openConnection();
             System.out.println("Соединение установлено: " + connected);
             String ardMessage;
-
+*/
             //Добавляем второй поток для считывания с ардуино
-            Thread thread = new Thread(new ClientHandler(reader,arduino));
+            Thread thread = new Thread(new ClientHandler(reader,writer2));
             thread.start();
-
-            /*
-             * TODO вернуть условие while((ardMessage = arduino.serialRead())!=null){
-             */
-            //
+//try{
             //while((ardMessage = arduino.serialRead())!=null){
-            //добавлено две строчки вместе
-            while (true){
-                ardMessage = arduino.serialRead();
-
+            String message2;
+            while ((message2 = reader2.readLine())!=null ){
+                writer.print(message2);
+                writer.flush();
+               // while(true){
+/*     TODO раскомментировать
+                    ardMessage = arduino.serialRead();
                 System.out.println("Пришло сообщение с Arduino: "+ardMessage);
-                if (ardMessage!=null){
+                if (ardMessage!=""){
                     writer.println("Пришло NOT NULL сообщение с ардуино:");
-
-                    /*
-                     * TODO поправить опечатку --> использовать "ardMessage" instead of "messsage"
-                     */
-
-                    writer.println(message);
+                    writer.println(ardMessage);
                     writer.flush();
-                    //Добавлен sleep для смены потока, чтобы не засиживался
-                    //Thread.sleep(100);
                 }
                 else {
                     writer.println("Пришло NULL сообщение с ардуино!");
                     writer.flush();
-                }
+                    }
+*/
             }
 
         } catch (Exception er) {
@@ -81,18 +84,23 @@ public class ArduinoServer {
     public class ClientHandler implements Runnable{
         Socket sock;
         BufferedReader reader;
+        PrintWriter writer;
+        /* TODO раскомментировать
         Arduino arduino;
-        public ClientHandler (BufferedReader reader,Arduino arduino){
-            this.arduino = arduino;
+        */
+        public ClientHandler (BufferedReader reader,  PrintWriter writer){
             this.reader = reader;
+            this.writer = writer;
         }
 
         public void run(){
-
             try {
                 while ((message = reader.readLine()) != null) {
                     //Просто передаём строку, которую прислал сервер.
-                    arduino.serialWrite(message);
+                    //arduino.serialWrite(message);
+                    writer.print(message);
+                    writer.flush();
+
                     Thread.sleep(100);
                 }
             } catch (Exception e){e.printStackTrace();}
